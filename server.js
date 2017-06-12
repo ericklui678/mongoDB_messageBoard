@@ -45,12 +45,11 @@ app.post('/comment/:mID', function(req, res){
         // set comment's message id to the id passed from HTML
         comment._message = req.params.mID;
         // push comment object into messages array in Messages collection
-        message.comments.push(comment);
+        Message.update({_id: req.params.mID}, {$push: {'comments': comment}}, function(err){});
+        // save comment data to Comments collection
         comment.save(function(err){
-            message.save(function(err){
-                if(err) {console.log("COULDN'T SAVE COMMENT");}
-                res.redirect('/');
-            })
+            if(err) {console.log(err);}
+            res.redirect('/');
         })
     })
 })
